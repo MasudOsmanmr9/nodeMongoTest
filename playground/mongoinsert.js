@@ -12,15 +12,15 @@ MongoClient.connect(url,(err,client)=>{
 console.log("connectd to mongodb server");
 const db = client.db(dbname);
 
-insertOne
+//insertOne
 data={
-    username:"afran",
-    location:"dhaka",
-    age:"31",
-    mobile:{
+    username:"arif",
+    location:"lokkipura,gazipur",
+    age:"24",
+    mobile:[{
         no1:"0165685235",
         no2:"2234243432"
-    }
+    }]
 }
 
 db.collection("users").insertOne(data, {w : "majority"},(err,res)=>{
@@ -28,7 +28,7 @@ db.collection("users").insertOne(data, {w : "majority"},(err,res)=>{
        return console.log("unable to insert data in this collection");
    }
   // console.log("inserted successfully :"+JSON.stringify(data,undefined,2));
-   console.log(res);
+   console.log(res.ops);
 
 });
 
