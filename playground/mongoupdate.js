@@ -36,6 +36,12 @@ db.collection("users").findOneAndUpdate({
        age:'23',
     mobile:{no1:"1244",no2:"1234"}} //u can specify the array positions object's field name like "mobile.0.no1"
     //$set:{age:"25",location:"kathalbagan_dhal,banglamotor","mobile.no1":"01613959595"} //u can specyfy only objects field
+   //u can update an array using $ operator like { "<array>.$" : value } 
+//    db.collection.updateMany(
+//     { <query conditions> },
+//     { <update operator>: { "<array>.$[<identifier>]" : value } },
+//     { arrayFilters: [ { <identifier>: <condition> } } ] }
+//  ) 
 },
 // {
 //     returnOriginal : false, //false return the new updated data true return the previous one 
