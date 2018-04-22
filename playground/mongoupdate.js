@@ -30,12 +30,12 @@ db.collection("users").findOneAndUpdate({
     //     age:'23',
     //  mobile:{no1:"1244",no2:"1234"}  //without $set u can upate but it will replace all old field with the new given field
     //  even it will remove th filter data find({username:"name"}) if u dont give it to in NON $set data 
-    $set:{
-       age:"25",
-       location:'lokkhipur,joydebpur',
-       age:'23',
-    mobile:{no1:"1244",no2:"1234"}} //u can specify the array positions object's field name like "mobile.0.no1"
-    //$set:{age:"25",location:"kathalbagan_dhal,banglamotor","mobile.no1":"01613959595"} //u can specyfy only objects field
+    // $set:{
+    //    age:"25",
+    //    location:'lokkhipur,joydebpur',
+    //    age:'23',
+    // mobile:{no1:"1244",no2:"1234"}} //u can specify the array positions object's field name like "mobile.0.no1"
+    $set:{"mobile.no2":"01819292929"} //u can specyfy only objects field
    //u can update an array using $ operator like { "<array>.$" : value } 
 //    db.collection.updateMany(
 //     { <query conditions> },
