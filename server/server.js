@@ -32,6 +32,15 @@ todo.save().then((docs)=>{
 res.status(400).send(e);
 });
 
+
+app.get('/todos',(req,res)=>{
+
+    Todo.find({}).then((docs)=>{
+        res.send({docs})
+    },(e)=>{
+        res.status(400).send(e);
+    })
+});
 //  Todo.findOneAndUpdate(
 //     {_id:req.body.id},
 //     { $set: {
