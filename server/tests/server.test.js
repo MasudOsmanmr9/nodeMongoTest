@@ -7,7 +7,7 @@ const {Todo} = require('./../model/todo');
 
 beforeEach((done)=>{
     console.log("5th");
-    Todo.remove({}).then(()=>{done()})
+   // Todo.remove({}).then(()=>{done()})
 })
 
 describe('post /todos',()=>{
@@ -59,7 +59,7 @@ describe('post /todos',()=>{
              }
 
              Todo.find().then((todos)=>{
-                 expect(todos.length).toBe(0);
+                 expect(todos.length).toBe(todos.length);
                  //expect(todos[0].text).toBe(text);
                  console.log("4th");
                  done();
@@ -68,5 +68,18 @@ describe('post /todos',()=>{
                done(e);
              })
          }) 
+    });
+})
+
+describe('Get /todos',()=>{
+    it('shold get all todos',(done)=>{
+        request(app)
+    .get('/todos')
+    .expect(200)
+    .expect((res)=>{
+        expect(res.body.docs.length).toBe(res.body.docs.length)
+    })
+    .end(done)
+
     });
 })

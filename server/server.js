@@ -1,14 +1,20 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var app = express();
 
+
+const {ObjectId}=require('mongodb');
 var {mongoose} = require("./db/mongoose");
 var {Todo} = require("./model/todo.js");
 var user = require("./model/user.js");
+
+var app = express();
+const port = process.env.PORT || 3000;
+
 //    db.collection.updateMany(
 //     { <query conditions> },
 //     { <update operator>: { "<array>.$[<identifier>]" : value } },
 //     { arrayFilters: [ { <identifier>: <condition> } } ] }
+
 //  )
 app.use(bodyParser.json());
 
@@ -35,11 +41,29 @@ res.status(400).send(e);
 
 app.get('/todos',(req,res)=>{
 
+    console.log("ha ha ha");
     Todo.find({}).then((docs)=>{
         res.send({docs})
     },(e)=>{
         res.status(400).send(e);
     })
+});
+
+app.get('/todos/:id',(req,res)=>{
+
+    console.log("ja ja ja");
+    var id=req.params.id;
+
+    if(!ObjectId.isValid(id)){
+      return  res.status(404).send();
+    }
+
+    Todo.findById({_id:id}).then((docs)=>{
+       if(!docs){
+        return  res.status(404).send();
+       }
+        res.send({docs})
+    }).catch((e)=>{res.status(404).send();})
 });
 //  Todo.findOneAndUpdate(
 //     {_id:req.body.id},
@@ -61,8 +85,8 @@ app.get('/todos',(req,res)=>{
 });
 
 
- app.listen(3000,()=>{
-     console.log("started on port 3000");
+ app.listen(port,()=>{
+     console.log(`started on port ${port}`);
  });
 
  module.exports ={app}
