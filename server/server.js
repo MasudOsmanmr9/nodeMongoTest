@@ -41,7 +41,7 @@ res.status(400).send(e);
 
 app.get('/todos',(req,res)=>{
 
-    console.log("ha ha ha");
+   // console.log("ha ha ha");
     Todo.find({}).then((docs)=>{
         res.send({docs})
     },(e)=>{
@@ -64,6 +64,25 @@ app.get('/todos/:id',(req,res)=>{
        }
         res.send({docs})
     }).catch((e)=>{res.status(404).send();})
+});
+
+
+app.delete('/todos/:id',(req,res)=>{
+     var id=req.params.id;
+     console.log(id);
+
+     if(!ObjectId.isValid(id)){
+       return  res.status(404).send();
+     }
+     
+     
+     Todo.findByIdAndRemove(id).then((doc)=>{
+         console.log(doc);
+         if(!doc){
+             return res.status(404).send('this document dosent exist');
+         }
+         res.send(doc);
+     }).catch((e)=>{res.status(404).send();});
 });
 //  Todo.findOneAndUpdate(
 //     {_id:req.body.id},
