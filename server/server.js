@@ -1,4 +1,4 @@
-var env = process.env.NODE_ENV || "developmente";
+var env = process.env.NODE_ENV || "development";
 
 console.log("env ************ ",env);
 if(env === "development"){
@@ -19,8 +19,8 @@ const _=require('lodash');
 const {ObjectId}=require('mongodb');
 var {mongoose} = require("./db/mongoose");
 var {Todo} = require("./model/todo.js");
-var user = require("./model/user.js");
-
+var {Users} = require("./model/user.js");
+var {authenticate} = require('./middleware/authenticate.js');
 var app = express();
 //const port = process.env.PORT || 3000;
 const port = process.env.PORT ;
@@ -53,6 +53,7 @@ todo.save().then((docs)=>{
 res.status(400).send(e);
 });
 
+});
 
 app.get('/todos',(req,res)=>{
 
@@ -70,12 +71,12 @@ app.get('/todos/:id',(req,res)=>{
     var id=req.params.id;
 
     if(!ObjectId.isValid(id)){
-      return  res.status(404).send();
+      return  res.status(404).send("your object formation is wrong dood check it out");
     }
 
     Todo.findById({_id:id}).then((docs)=>{
        if(!docs){
-        return  res.status(404).send();
+        return  res.status(404).send("i think he is not anymore our own :/");
        }
         res.send({docs})
     }).catch((e)=>{res.status(404).send();})
@@ -100,6 +101,7 @@ app.delete('/todos/:id',(req,res)=>{
      }).catch((e)=>{res.status(404).send();});
 });
 
+//update '/todos/:id'
 app.patch('/todos/:id',(req,res)=>{
 var id = req.params.id;
 var body=_.pick(req.body,['text',"phone",'compleated']);
@@ -143,6 +145,45 @@ if(!ObjectId.isValid(id)){
 //     console.log(e);
 // });
 
+app.post('/users',(req,res)=>{
+    var body=_.pick(req.body,['email','password'])
+    var user = new Users(body);
+    console.log("well its hitting: ",body);
+    user.save().then(()=>{
+        return user.generateAuthToken();
+        //res.status(200).send(docs);
+    }).then((token)=>{
+        res.header('x-auth',token).send(user);
+    }).catch((e)=>{
+        if(e.code == 11000){
+            return res.status(400).send("this email already exist");
+        }
+        res.status(400).send(e);
+    })
+});
+
+// var authenticate = (req,res,next)=>{
+//     var token = req.header('x-auth');
+
+//     console.log(token);
+
+//     Users.findByToken(token).then((user)=>{
+//         if(!user){
+//             return Promise.reject();
+//         }
+//         console.log('okkkkkkkkkk');
+//         //res.send(user);
+//         req.user=user;
+//         req.token=token;
+//         console.log(req.user," and ",req.token);
+//     }).catch ((e)=>{
+//         res.status(401).send();
+//     })
+// }
+
+app.get('/users/me',authenticate,(req,res)=>{
+    console.log('yeah its working');
+    res.send(req.user);
 });
 
 
